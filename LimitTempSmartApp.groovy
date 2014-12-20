@@ -62,18 +62,17 @@ def updated() {
 def pollingTask() {
 	def heatingSetpoint = settings.device.latestValue("heatingSetpoint")
     def coolingSetpoint = settings.device.latestValue("coolingSetpoint")
-    TRACE("pollingTask()")
-    TRACE("Heating Set Point: ${heatingSetpoint}")
-    TRACE("Cooling Set Point: ${coolingSetpoint}")
-    TRACE("Heating Max Point: ${max_heat}")
-    TRACE("Cooling Min Point: ${min_cool}")
+    DEBUG("Heating Set Point: ${heatingSetpoint}")
+    DEBUG("Cooling Set Point: ${coolingSetpoint}")
+    DEBUG("Heating Max Point: ${max_heat}")
+    DEBUG("Cooling Min Point: ${min_cool}")
     
     	if (heatingSetpoint > max_heat){
-    		TRACE("Change heatingSetpoint to ${max_heat}")
+    		DEBUG("Change heatingSetpoint to ${max_heat}")
             settings.device.setHeatingSetpoint(max_heat)
         }
     	if (coolingSetpoint < min_cool){
-    		TRACE("Change coolingSetpoint to ${min_cool}")
+    		DEBUG("Change coolingSetpoint to ${min_cool}")
             settings.device.setCoolingSetpoint(min_cool)
         }
 }
@@ -82,13 +81,13 @@ def initialize() {
 	// TODO: subscribe to attributes, devices, locations, etc.
     def minutes = settings."interval".toInteger()
     if (minutes > 0) {
-    	TRACE("Scheduling monitor task to run every ${minutes} minutes.")
+    	DEBUG("Scheduling monitor task to run every ${minutes} minutes.")
         def sched = "0 0/${minutes} * * * ?"
         schedule(sched, pollingTask)
     }
 }
 
 // TODO: implement event handlers
-private def TRACE(message) {
+private def DEBUG(message) {
     log.debug message
 }
