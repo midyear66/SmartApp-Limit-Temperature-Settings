@@ -20,7 +20,7 @@ definition(
     name: "Monitor Max Heat/Min Cool Thermostat Settings",
     namespace: "midyear66",
     author: "Bob Sanford",
-    description: "SmartApp to regulate max/min temperature setting of any Z-Wave Connected Thermostat",
+    description: "SmartApp to regulate max/min temperature setting of any connected thermostat",
     category: "Green Living",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
