@@ -22,7 +22,7 @@ definition(
     author: "Bob Sanford",
     description: "SmartApp to regulate max/min temperature setting of any connected thermostat",
     category: "Green Living",
-    iconurl: "https://s3.amazonaws.com/smartthings-device-icons/thermostat/auto.png"
+    iconurl: "https://s3.amazonaws.com/smartthings-device-icons/thermostat/auto.png",
     iconX2Url: "https://s3.amazonaws.com/smartthings-device-icons/thermostat/auto@2x.png",
     iconX3Url: "https://s3.amazonaws.com/smartthings-device-icons/thermostat/auto@2x.png")
 
