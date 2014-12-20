@@ -29,8 +29,8 @@ preferences {
         paragraph "This SmartApp is a process that monitors the temperature setting " +
             "periodically for the selected thermostat.  If a user attempts to raise " +
             "the temperature above or below a selected value, the SmartApp will adjust " +
-            "the setting to a designated Max/Min value.  This replaces telling my daughter; Remember, a house does not warm " +
-            "up any faster if you set the temperature really high ;)!"
+            "the setting to a designated Max/Min value.  This replaces telling my daughter; " +
+            "Remember, a house does not warm up any faster if you set the temperature really high ;)!"
         paragraph "Version 1.0\nCopyright (c) 2014 ssetco.com"
     }
     
