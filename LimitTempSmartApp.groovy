@@ -89,5 +89,5 @@ def initialize() {
 
 // TODO: implement event handlers
 private def DEBUG(message) {
-    log.debug message
+//    log.debug message
 }
