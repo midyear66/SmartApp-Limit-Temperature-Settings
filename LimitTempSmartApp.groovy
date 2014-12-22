@@ -79,7 +79,7 @@ def pollingTask() {
 
 def initialize() {
 	// TODO: subscribe to attributes, devices, locations, etc.
-    def minutes = settings."interval".toInteger()
+    def minutes = settings.interval.toInteger()
     if (minutes > 0) {
     	DEBUG("Scheduling monitor task to run every ${minutes} minutes.")
         def sched = "0 0/${minutes} * * * ?"
