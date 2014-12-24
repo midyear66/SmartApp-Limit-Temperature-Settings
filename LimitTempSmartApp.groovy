@@ -30,9 +30,10 @@ definition(
 preferences {
 	section("About") {
         paragraph "This SmartApp is a process that monitors the temperature setting " +
-            "periodically for the selected thermostat.  If a user attempts to raise " +
-            "the temperature above or below a selected value, the SmartApp will adjust " +
-            "the setting to a designated Max/Min value.  This replaces telling my daughter; " +
+            "for the selected thermostat.  If a user attempts to raise the temperature" +
+            "above or below a selected value, the SmartApp will adjust " +
+            "the setting to a designated Max/Min value after a given time." +  
+            "This replaces telling my daughter; " +
             "Remember, a house does not warm up any faster if you set the temperature really high ;)!"
         paragraph "Version 1.0\nCopyright (c) 2014 ssetco.com"
     }
@@ -40,54 +41,74 @@ preferences {
 	section("Thermostat") {
 		// TODO: put inputs here
         input "device", "capability.thermostat", title:"Select thermostat to be monitored", multiple:false, required:false
-        input "min_cool", "number", title:"Set minimum cooling value", defaultValue:70
-        input "max_heat", "number", title:"Set maximum heating value", defaultValue:74
-        input "interval", "number", title:"Set monitor interval (in minutes)", defaultValue:5
+        input "nor_cool", "number", title:"Set normal cooling value", defaultValue:74
+	input "min_cool", "number", title:"Set minimum cooling value", defaultValue:72
+	input "nor_heat", "number", title:"Set normal heating value", defaultValue:70
+        input "max_heat", "number", title:"Set maximum heating value", defaultValue:72
+        input "length", "number", title:"How long to allow HVAC to reach Max Temp (in minutes)", defaultValue:10
 	}
 }
 
 def installed() {
-	log.debug "Installed with settings: ${settings}"
+	DEBUG("Installed with settings: ${settings}")
 
 	initialize()
 }
 
 def updated() {
-	log.debug "Updated with settings: ${settings}"
+	DEBUG("Updated with settings: ${settings}")
 	
 	unsubscribe()
 	initialize()
 }
 
-def pollingTask() {
-	def heatingSetpoint = settings.device.latestValue("heatingSetpoint")
-    def coolingSetpoint = settings.device.latestValue("coolingSetpoint")
-    DEBUG("Heating Set Point: ${heatingSetpoint}")
-    DEBUG("Cooling Set Point: ${coolingSetpoint}")
-    DEBUG("Heating Max Point: ${max_heat}")
-    DEBUG("Cooling Min Point: ${min_cool}")
-    
-    	if (heatingSetpoint > max_heat){
-    		DEBUG("Change heatingSetpoint to ${max_heat}")
-            settings.device.setHeatingSetpoint(max_heat)
-        }
-    	if (coolingSetpoint < min_cool){
-    		DEBUG("Change coolingSetpoint to ${min_cool}")
-            settings.device.setCoolingSetpoint(min_cool)
-        }
-}
-
 def initialize() {
 	// TODO: subscribe to attributes, devices, locations, etc.
-    def minutes = settings.interval.toInteger()
-    if (minutes > 0) {
-    	DEBUG("Scheduling monitor task to run every ${minutes} minutes.")
-        def sched = "0 0/${minutes} * * * ?"
-        schedule(sched, pollingTask)
-    }
+	def heatingSetpoint = settings.device.latestValue("heatingSetpoint")
+	def coolingSetpoint = settings.device.latestValue("coolingSetpoint")
+    
+	DEBUG("Current Heating Set Point: ${heatingSetpoint}")
+	DEBUG("Current Cooling Set Point: ${coolingSetpoint}")
+	DEBUG("Heating Max Point: ${max_heat}")
+	DEBUG("Cooling Min Point: ${min_cool}")
+	DEBUG("Heating Normal Point: ${nor_heat}")
+	DEBUG("Cooling Normal Point: ${nor_cool}")
+	DEBUG("Length of Allowance: ${length}")
+
+	subscribe(settings.device, "heatingSetpoint", heatingEventHandler)
+	subscribe(settings.device, "coolingSetpoint", coolingEventHandler)
 }
 
 // TODO: implement event handlers
+
+def coolingEventHandler(evt){
+	DEBUG("coolingEventHandler: ${evt.value}: ${evt}, ${settings}")
+	def minutes = settings.length.toInteger()
+	def seconds = minutes*60
+	if(evt.value.toInteger() <= max_cool.toInteger()){
+		runIn(seconds, raiseAC)
+    }
+}
+
+def heatingEventHandler(evt){
+	DEBUG("heatingEventHandler: ${evt.value}: ${evt}, ${settings}")
+	def minutes = settings.length.toInteger()
+	def seconds = minutes*60
+	if(evt.value.toInteger() >= max_heat.toInteger()){
+		runIn(seconds, lowerHeat)
+    }
+}
+
+def lowerHeat(){
+	DEBUG("Changing heatingSetpoint to ${nor_heat}")
+        settings.device.setHeatingSetpoint(nor_heat)
+}
+
+def raiseAC(){
+    	DEBUG("Changing coolingSetpoint to ${nor_cool}")
+        settings.device.setCoolingSetpoint(nor_cool)
+}
+
 private def DEBUG(message) {
-//    log.debug message
+//	log.debug message
 }
