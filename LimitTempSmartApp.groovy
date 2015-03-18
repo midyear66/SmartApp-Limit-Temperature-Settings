@@ -25,7 +25,6 @@ definition(
     iconurl: "https://s3.amazonaws.com/smartthings-device-icons/thermostat/auto.png",
     iconX2Url: "https://s3.amazonaws.com/smartthings-device-icons/thermostat/auto@2x.png")
 
-
 preferences {
 	section("About") {
         paragraph "This SmartApp is a process that monitors the temperature setting " +
