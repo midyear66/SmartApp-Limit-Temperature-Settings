@@ -1,4 +1,4 @@
-Smartthings-Limit-Temp
+Smartthings-Limit-Temp (ARCHIVED)
 ======================
 
 SmartApp to limit the thermostats Max and Min Settings.
